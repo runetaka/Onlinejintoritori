@@ -37,7 +37,7 @@ public class InputManager : MonoBehaviourPunCallbacks
             int layerMask = 1;
             float maxDistance = 10;
             RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, maxDistance, layerMask);
-
+            //Nullè¡Ç∑
             if (hit.collider)
             {
                 Node n = hit.collider.GetComponent<Node>();
@@ -47,7 +47,12 @@ public class InputManager : MonoBehaviourPunCallbacks
                   GameManager.instance.VisutToNodes(n);
                    
                 }
+                
             }
+            //else
+            //{
+            //    GameManager.instance.Selectednodenull();
+            //}
         }
     }
     

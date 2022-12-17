@@ -14,8 +14,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             instance = this;
         }
     }
-    Node selectedNode;
-    Node nodeToVisit;
+    public Node selectedNode;
+    public Node nodeToVisit;
 
     public void HandleSelectedNodes(Node node)
     { 
@@ -62,5 +62,11 @@ public class GameManager : MonoBehaviourPunCallbacks
             nodeToVisit = null;
         }
     }
+
+        //public void Selectednodenull()
+        //{
+        //    selectedNode = null;
+        //    Debug.Log("Node DESELECTED");
+        //}
 
 }

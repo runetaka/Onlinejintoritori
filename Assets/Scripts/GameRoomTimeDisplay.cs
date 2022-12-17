@@ -21,5 +21,11 @@ public class GameRoomTimeDisplay : MonoBehaviour
         // ゲームの経過時間を求めて、小数第一位まで表示する
         float elapsedTime = Mathf.Max(0f, unchecked(PhotonNetwork.ServerTimestamp - timestamp) / 1000f);
         timeLabel.text = elapsedTime.ToString("f0");
+
+        if (elapsedTime > 5)
+        {
+            Debug.Log("timeover");
+            
+        }
     }
 }

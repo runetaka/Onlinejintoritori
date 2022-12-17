@@ -28,6 +28,8 @@ public class Unit : MonoBehaviour
         fraction = _fraction;
         goal = goalNode;
         GetComponent<SpriteRenderer>().material = mat;
+        //追加　子オブジェクトのマテリアル変更
+        //transform.GetChild(1).GetComponent<Renderer>().material = child;
         startPos = transform.position;
         degree = _degree;
     }

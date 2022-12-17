@@ -43,6 +43,8 @@ MonoBehaviour:
   - SendALLunits
   - SendUnits
   - VisutToNodes
+  - Playerposition
+  - setSprite
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

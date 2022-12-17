@@ -25,7 +25,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3535694349088149670}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -265,7 +265,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8964100247799024611}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.32, y: -3.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -293,7 +293,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: e4ce4b838bd302349bc951318e1fc44f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -357,6 +357,10 @@ MonoBehaviour:
   - {fileID: 2100000, guid: e4ce4b838bd302349bc951318e1fc44f, type: 2}
   - {fileID: 2100000, guid: f564ae71ee074434c96b3b6852892384, type: 2}
   - {fileID: 2100000, guid: 45b425ea3b5ec1b47bf51f13a8c739a5, type: 2}
+  fieldmaterials:
+  - {fileID: 2100000, guid: cf0d433a4cf06ff409fa548a221b8924, type: 2}
+  - {fileID: 2100000, guid: 4c06f99d6bdfcb5448c500d4d0636da2, type: 2}
+  - {fileID: 2100000, guid: 3a106eeb601da774ca26f623845d3766, type: 2}
   amountText: {fileID: 5822109467481875667}
   fraction: 2
   type: 1
