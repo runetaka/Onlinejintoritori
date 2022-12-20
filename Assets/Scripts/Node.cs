@@ -93,25 +93,30 @@ public class Node : MonoBehaviourPunCallbacks, IPunObservable
 
         if (photonView.IsRoomView)
         {
+            if (!materials[2])
+            {
+                
+                GetComponent<SpriteRenderer>().material = materials[0];
+                transform.parent.GetComponent<Renderer>().material = fieldmaterials[0];
+                //transform.GetChild(1).GetComponent<Renderer>().material = fieldcolor["Glay"];
+                //Sprite fieldsprite = Resources.Load<Sprite>("Sprites/" + name);
+                //transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = fieldsprite;
+                //追加　子オブジェクトのマテリアル変更
+                //transform.GetChild(1).GetComponent<Renderer>().material = fieldmaterials[0];
+                //Invoke("NPCField", 0.5f);
+                //Fieldsetting();
+                
+            }
             //Dictionary<string, Material> fieldcolor = new Dictionary<string, Material>
             //{
             //{"Glay", fieldmaterials[0]},
             //{"Red", fieldmaterials[1]},
             //{"Blue", fieldmaterials[2]},
             //};
-
-            GetComponent<SpriteRenderer>().material = materials[0];
-            transform.parent.GetComponent<Renderer>().material = fieldmaterials[0];
-            //transform.GetChild(1).GetComponent<Renderer>().material = fieldcolor["Glay"];
-            //Sprite fieldsprite = Resources.Load<Sprite>("Sprites/" + name);
-            //transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = fieldsprite;
-            //追加　子オブジェクトのマテリアル変更
-            //transform.GetChild(1).GetComponent<Renderer>().material = fieldmaterials[0];
-            //Invoke("NPCField", 0.5f);
-            //Fieldsetting();
             this.fraction = Fraction.NPC;
             this.type = NodeType.SMALL_CITY;
             amountText.text = "10/10";
+
         }
 
 
@@ -171,6 +176,9 @@ public class Node : MonoBehaviourPunCallbacks, IPunObservable
         {
             stream.SendNext(this.name);
             stream.SendNext(currentAmount);
+            stream.SendNext(fraction);
+
+            
             
            
             
@@ -180,6 +188,8 @@ public class Node : MonoBehaviourPunCallbacks, IPunObservable
 
             this.name = (string)stream.ReceiveNext();
             currentAmount = (int)stream.ReceiveNext();
+            fraction = (Fraction)stream.ReceiveNext();
+            
             UpdateAmountText();
             
         }
@@ -237,7 +247,7 @@ public class Node : MonoBehaviourPunCallbacks, IPunObservable
     {
         for (int i = 0; i < numberOfUnits; i++)
         {
-            Debug.Log(i);
+            //Debug.Log(i);
             Pos = this.transform.position;
             GameObject newUnit = Instantiate(unitPrefab, Pos, Quaternion.identity);
             Unit unit = newUnit.GetComponent<Unit>();
@@ -265,7 +275,7 @@ public class Node : MonoBehaviourPunCallbacks, IPunObservable
 
     public void HandleIncomingUnit(Fraction f,int senderID)
     {
-        Debug.Log(f);
+        //Debug.Log(f);
        if(f == fraction)
        {
         //Debug.Log("Nodeの情報を変更します");
@@ -388,13 +398,13 @@ public class Node : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
-            Debug.Log("isMine");
+            //Debug.Log("isMine");
             photonView.RPC("setSprite", RpcTarget.OthersBuffered, name);
         }
         else
         {
 
-            Debug.Log(name);
+            //Debug.Log(name);
             this.transform.parent.name = name;
             Sprite fieldsprite = Resources.Load<Sprite>("Sprites/" + name);
             this.transform.parent.GetComponent<SpriteRenderer>().sprite = fieldsprite;

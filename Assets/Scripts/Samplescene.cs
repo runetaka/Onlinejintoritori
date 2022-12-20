@@ -32,18 +32,20 @@ public class Samplescene : MonoBehaviourPunCallbacks
 
         };
 
-    
-    
 
+
+    List<string> npcname = new List<string>();
     public Material[] materials;
+    
     public Material[] fieldmaterials;
 
     Sprite Prefstatas;
     public Sprite[] prefsprites;
+    
 
-   
+
     //nodeのろーかるポジション
-       
+
     private void Start()
     {
         //Titleから入る場合
@@ -68,11 +70,15 @@ public class Samplescene : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         NodeInstantiate();
+
+        
     }
     // ランダムな座標に自身のアバター（ネットワークオブジェクト）を生成する
     //var position = new Vector3(0,0,0);
     public void NodeInstantiate()
     {
+        
+        
 
         Dictionary<string, Material> fieldcolor = new Dictionary<string, Material>
     {
@@ -85,16 +91,17 @@ public class Samplescene : MonoBehaviourPunCallbacks
 
 
         Vector3 position = PlayerPoint();
-        //if (PhotonNetwork.IsMasterClient)
-        //{
+        if (PhotonNetwork.IsMasterClient)
+        {
         var field = PhotonNetwork.Instantiate("千葉", position, Quaternion.identity);
         //var node = PhotonNetwork.Instantiate("Node", position, Quaternion.identity);
         field.GetComponent<Renderer>().material = fieldcolor["Red"];
         Sprite sprite = Resources.Load<Sprite>("Sprites/千葉");
         field.GetComponent<SpriteRenderer>().sprite = sprite;
 
-        //}
+        }
         var dic = this.Prefpos;
+        //dic.Remove("栃木");
         dic.Remove("千葉");
 
 
@@ -114,6 +121,7 @@ public class Samplescene : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
+           
             foreach (var (name,fieldPos) in dic)
             {
             
@@ -126,16 +134,24 @@ public class Samplescene : MonoBehaviourPunCallbacks
                 NpcField.name = name;
                 Node node = NpcField.transform.GetChild(0).gameObject.GetComponent<Node>();
                 node.setSprite(name);
+                npcname.Add(name);
 
             }
             
         }
 
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.CurrentRoom.SetStartTime(PhotonNetwork.ServerTimestamp);
+        }
+
+
+
         //foreach (Sprite pre in prefsprites)
         //{
-            
-            
-            
+
+
+
         //    foreach (Vector3 roomposition in positions)
         //    {
         //        Npcnode = PhotonNetwork.InstantiateRoomObject("Node", roomposition, Quaternion.identity);
@@ -152,16 +168,21 @@ public class Samplescene : MonoBehaviourPunCallbacks
         //}
 
 
-        
-
-
-
-
-
-
-        if (PhotonNetwork.IsMasterClient)
+        GameObject[] roomObjects = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject roomObject in roomObjects)
         {
-            PhotonNetwork.CurrentRoom.SetStartTime(PhotonNetwork.ServerTimestamp);
+
+            PhotonView photonView = roomObject.GetComponent<PhotonView>();
+            if (photonView != null && photonView.IsMine)
+            {
+                if (roomObject.name == "栃木")
+                {
+                    roomObject.transform.GetChild(0).GetComponent<Renderer>().material = Node.instance.materials[2];
+                    roomObject.GetComponent<Renderer>().material = Node.instance.fieldmaterials[2];
+                    roomObject.transform.GetChild(0).GetComponent<Node>().fraction = Fraction.PLAYER;
+                }
+
+            }
         }
     }
 

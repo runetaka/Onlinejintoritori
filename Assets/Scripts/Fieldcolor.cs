@@ -8,6 +8,7 @@ public class Fieldcolor : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallbac
     public GameObject parentObject;
     public Material[] fieldmaterials;
     // Start is called before the first frame update
+ 
     void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
     {
         if (!photonView.IsRoomView)
@@ -46,5 +47,7 @@ public class Fieldcolor : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallbac
 
 
     }
+
+    
 }
 
