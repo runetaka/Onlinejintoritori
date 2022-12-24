@@ -39,6 +39,7 @@ namespace Photon.Realtime
     /// </remarks>
     public class Room : RoomInfo
     {
+
         /// <summary>
         /// A reference to the LoadBalancingClient which is currently keeping the connection and state.
         /// </summary>

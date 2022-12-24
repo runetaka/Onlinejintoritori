@@ -13,7 +13,7 @@ public enum Fraction
         PLAYER
     }
 
-public class Node : MonoBehaviourPunCallbacks, IPunObservable
+public class Node : MonoBehaviourPunCallbacks, IPunObservable, IPunInstantiateMagicCallback
 {
     public static Node instance;
     int maxAmount;
@@ -93,11 +93,14 @@ public class Node : MonoBehaviourPunCallbacks, IPunObservable
 
         if (photonView.IsRoomView)
         {
-            if (!materials[2])
-            {
+            
+            
                 
                 GetComponent<SpriteRenderer>().material = materials[0];
                 transform.parent.GetComponent<Renderer>().material = fieldmaterials[0];
+                this.fraction = Fraction.NPC;
+                this.type = NodeType.SMALL_CITY;
+                amountText.text = "10/10";
                 //transform.GetChild(1).GetComponent<Renderer>().material = fieldcolor["Glay"];
                 //Sprite fieldsprite = Resources.Load<Sprite>("Sprites/" + name);
                 //transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = fieldsprite;
@@ -105,17 +108,15 @@ public class Node : MonoBehaviourPunCallbacks, IPunObservable
                 //transform.GetChild(1).GetComponent<Renderer>().material = fieldmaterials[0];
                 //Invoke("NPCField", 0.5f);
                 //Fieldsetting();
-                
-            }
+
+            
             //Dictionary<string, Material> fieldcolor = new Dictionary<string, Material>
             //{
             //{"Glay", fieldmaterials[0]},
             //{"Red", fieldmaterials[1]},
             //{"Blue", fieldmaterials[2]},
             //};
-            this.fraction = Fraction.NPC;
-            this.type = NodeType.SMALL_CITY;
-            amountText.text = "10/10";
+            
 
         }
 
@@ -171,12 +172,13 @@ public class Node : MonoBehaviourPunCallbacks, IPunObservable
 
     void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+        //&& this.photonView.IsMine
         //Debug.Log("発生");
-        if (stream.IsWriting  && this.photonView.IsMine)
+        if (stream.IsWriting)
         {
             stream.SendNext(this.name);
             stream.SendNext(currentAmount);
-            stream.SendNext(fraction);
+            
 
             
             
@@ -188,7 +190,7 @@ public class Node : MonoBehaviourPunCallbacks, IPunObservable
 
             this.name = (string)stream.ReceiveNext();
             currentAmount = (int)stream.ReceiveNext();
-            fraction = (Fraction)stream.ReceiveNext();
+            
             
             UpdateAmountText();
             
@@ -255,7 +257,7 @@ public class Node : MonoBehaviourPunCallbacks, IPunObservable
             float intervalDeg = 10f;
             float minDeg = -(numberOfUnits - 1) * intervalDeg / 2;
             float degree = (minDeg + intervalDeg * (float)i) / 180f * Mathf.PI;
-            newUnit.GetComponent<Unit>().SetUnit(fraction, goalNode, GetComponent<SpriteRenderer>().material, degree);
+            newUnit.GetComponent<Unit>().SetUnit(fraction, goalNode, GetComponent<SpriteRenderer>().material,transform.parent.GetComponent<Fieldcolor>(),degree);
 
         }
 
@@ -333,52 +335,52 @@ public class Node : MonoBehaviourPunCallbacks, IPunObservable
         throw new System.NotImplementedException();
     }
 
-    //void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
-    //{
-    //    if (!photonView.IsRoomView)
-    //    {
-    //        if (info.Sender.IsLocal)
-    //        {
-    //           Debug.Log("自身がネットワークオブジェクトを生成しました");
-    //            GetComponent<SpriteRenderer>().material = materials[1];
+    void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        if (!photonView.IsRoomView)
+        {
+            if (info.Sender.IsLocal)
+            {
+                Debug.Log("自身がネットワークオブジェクトを生成しました");
+                //GetComponent<SpriteRenderer>().material = materials[1];
 
-    //            //追加
-    //            //Fieldsetting();
+                //追加
+                //Fieldsetting();
 
-    //            //追加
-    //            //transform.parent.GetComponent<Renderer>().material = fieldmaterials[1];
-    //            //PlayerField();
-    //            this.fraction = Fraction.PLAYER;
+                //追加
+                //transform.parent.GetComponent<Renderer>().material = fieldmaterials[1];
+                //PlayerField();
+                this.fraction = Fraction.PLAYER;
 
-    //            //追加　位置変更
-    //            //var playerposition = new Vector3(0, -6, 0);
-    //            //Playerpos = playerposition;
-    //            //this.Pos = new Vector3(0, 5, 0);
-    //        }
-    //        else
-    //        {
-    //            Debug.Log("他プレイヤーがネットワークオブジェクトを生成しました");
-    //            GetComponent<SpriteRenderer>().material = materials[2];
-    //            //追加
-    //            //Fieldsetting();
+                //追加　位置変更
+                //var playerposition = new Vector3(0, -6, 0);
+                //Playerpos = playerposition;
+                //this.Pos = new Vector3(0, 5, 0);
+            }
+            else
+            {
+                Debug.Log("他プレイヤーがネットワークオブジェクトを生成しました");
+                //GetComponent<SpriteRenderer>().material = materials[2];
+                //追加
+                //Fieldsetting();
 
-    //            //追加
-    //            //transform.parent.GetComponent<Renderer>().material = fieldmaterials[2];
-    //            //EnemyField();
-    //            this.fraction = Fraction.ENEMY;
+                //追加
+                //transform.parent.GetComponent<Renderer>().material = fieldmaterials[2];
+                //EnemyField();
+                this.fraction = Fraction.ENEMY;
 
-    //            //追加　位置変更
-    //            //var enemyposition = new Vector3(0,6,0);
-    //            //Enemypos = enemyposition;
-    //            //this.Pos = new Vector3(0, -5, 0);
+                //追加　位置変更
+                //var enemyposition = new Vector3(0,6,0);
+                //Enemypos = enemyposition;
+                //this.Pos = new Vector3(0, -5, 0);
 
 
-    //        }
-    //    }
+            }
+        }
 
-       
-    //}
-    public void NPCField()
+
+        }
+        public void NPCField()
     {
         transform.parent.GetComponent<Renderer>().material = fieldmaterials[0];
        
@@ -398,13 +400,13 @@ public class Node : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
-            //Debug.Log("isMine");
+            Debug.Log("isMine");
             photonView.RPC("setSprite", RpcTarget.OthersBuffered, name);
         }
         else
         {
 
-            //Debug.Log(name);
+            Debug.Log(name);
             this.transform.parent.name = name;
             Sprite fieldsprite = Resources.Load<Sprite>("Sprites/" + name);
             this.transform.parent.GetComponent<SpriteRenderer>().sprite = fieldsprite;

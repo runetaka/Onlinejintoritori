@@ -9,7 +9,7 @@ public class Unit : MonoBehaviour
 {
     public Fraction fraction;
     Node goal;
-
+    Fieldcolor fieldcolor;
     public float degree;
     public bool isLastUnit; // 5番目の玉なのか?
     float speed = 0.5f;
@@ -23,11 +23,12 @@ public class Unit : MonoBehaviour
 
 
 
-    public void SetUnit(Fraction _fraction, Node goalNode, Material mat,float _degree)
+    public void SetUnit(Fraction _fraction, Node goalNode, Material mat, Fieldcolor _fieldcolor, float _degree)
     {
         fraction = _fraction;
         goal = goalNode;
         GetComponent<SpriteRenderer>().material = mat;
+        fieldcolor = _fieldcolor;
         //追加　子オブジェクトのマテリアル変更
         //transform.GetChild(1).GetComponent<Renderer>().material = child;
         startPos = transform.position;
@@ -40,8 +41,51 @@ public class Unit : MonoBehaviour
         //startPos.x = startPos.x + Vecx;
         double x = 1 - (Math.Pow((goal.transform.position.x - transform.position.x), 2) + Math.Pow((goal.transform.position.y - transform.position.y), 2)) / (Math.Pow((goal.transform.position.x - startPos.x), 2) + Math.Pow((goal.transform.position.y - startPos.y), 2));
 
+        Sprite fieldcolorDifference = fieldcolor.GetComponent<SpriteRenderer>().sprite;
 
-        speed = easeInExpo((float)x);
+        //Debug.Log(fieldcolorDifference.name);
+        //if (fieldcolorDifference.name == "東京")
+        //{
+        //    Debug.Log("発射東京");
+        //    speed = 0.5f;
+        //}
+        //else
+        //{
+        //    Debug.Log("発射他");
+
+        //    speed = easeInExpo((float)x);
+            
+        //}
+
+        switch(fieldcolorDifference.name)
+        {
+            case "栃木":
+                Debug.Log("栃木");
+                speed = 0.5f;
+                break;
+
+            case "東京":
+                Debug.Log("東京");
+                speed = easeInExpo((float)x);
+                break;
+
+            case "茨城":
+                Debug.Log("茨城");
+                speed = (float)easeOutElastic((float)x);
+                break;
+
+            case "埼玉":
+                Debug.Log("埼玉");
+                speed = 0.5f;
+                break;
+
+
+
+        }
+
+
+
+
         if (speed < 0.1f)
         {
             speed = 0.1f;
@@ -97,8 +141,18 @@ public class Unit : MonoBehaviour
     }
     float easeInExpo(float x)
     {
-        return x == 0f ? 0f : (float)(Math.Pow(2f, 7 * x - 5));
+        return x == 0f ? 0f : (float)(Math.Pow(0.1f, 20f * x - 0.01f));
     }
-    
+
+    double easeOutElastic(double x) 
+    {
+        double z = (2 * Math.PI) / 3;
+
+        return x == 0
+        ? 0
+        : x == 1
+        ? 1
+        : Math.Pow(2, -10 * x) * Math.Sin(x* 10 - 0.75) * z +1 ;
+    }
 
 }

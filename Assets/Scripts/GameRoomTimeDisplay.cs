@@ -1,11 +1,14 @@
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using Photon.Realtime;
 
 public class GameRoomTimeDisplay : MonoBehaviour
 {
     private TextMeshProUGUI timeLabel;
 
+    
     private void Start()
     {
         timeLabel = GetComponent<TextMeshProUGUI>();

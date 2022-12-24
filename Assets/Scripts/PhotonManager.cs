@@ -18,11 +18,11 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public GameObject errorPanel;
     public Text errorText;
     public GameObject roomListPanel;
-    public Room originalRoomButton;
+    public Roomview originalRoomButton;
     public GameObject roomButtonContent;
     Dictionary<string, RoomInfo> roomsList = new Dictionary<string, RoomInfo>();
 
-    private List<Room> allRoomButtons = new List<Room>();
+    private List<Roomview> allRoomButtons = new List<Roomview>();
 
     public Text playerNameText;
     private List<Text> allPlayerNames = new List<Text>();
@@ -47,6 +47,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
         if (!PhotonNetwork.IsConnected)
         {
+            Debug.Log("ê⁄ë±");
             PhotonNetwork.ConnectUsingSettings();
         }
     }
@@ -142,7 +143,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        //RoomUIInitialization();
+        RoomUIInitialization();
 
         UpdateRoomList(roomList);
     }
@@ -163,31 +164,31 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             }
         }
 
-        //RoomListDisplay(roomsList);
+        RoomListDisplay(roomsList);
     }
 
-    //public void RoomListDisplay(Dictionary<string,RoomInfo> cachedRoomList)
-    //{
-    //    foreach (var roomInfo in cachedRoomList)
-    //    {
-    //        Room newButton = Instantiate(originalRoomButton);
+    public void RoomListDisplay(Dictionary<string,RoomInfo> cachedRoomList)
+    {
+        foreach (var roomInfo in cachedRoomList)
+        {
+            Roomview newButton = Instantiate(originalRoomButton);
 
-    //        newButton.ResisterRoomDetails(roomInfo.Value);
+            newButton.ResisterRoomDetails(roomInfo.Value);
 
-    //        newButton.transform.SetParent(roomButtonContent.transform);
-    //        allRoomButtons.Add(newButton);
-    //    }
-    //}
+            newButton.transform.SetParent(roomButtonContent.transform);
+            allRoomButtons.Add(newButton);
+        }
+    }
 
-    //public void RoomUIInitialization()
-    //{
-    //    foreach (Room rm in allRoomButtons)
-    //    {
-    //        Destroy(rm.gameObject);
-    //    }
+    public void RoomUIInitialization()
+    {
+        foreach (Roomview rm in allRoomButtons)
+        {
+            Destroy(rm.gameObject);
+        }
 
-    //    allRoomButtons.Clear();
-    //}
+        allRoomButtons.Clear();
+    }
 
     public void JoinRoom(RoomInfo roomInfo)
     {

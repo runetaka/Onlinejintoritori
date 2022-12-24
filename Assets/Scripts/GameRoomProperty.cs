@@ -3,6 +3,7 @@ using Photon.Realtime;
 
 public static class GameRoomProperty
 {
+
     private const string KeyStartTime = "StartTime";
 
     private static readonly Hashtable propsToSet = new Hashtable();
@@ -29,4 +30,8 @@ public static class GameRoomProperty
         room.SetCustomProperties(propsToSet);
         propsToSet.Clear();
     }
+
+
+
+
 }

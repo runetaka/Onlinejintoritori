@@ -6,6 +6,8 @@ using System.Collections.Generic;
 // MonoBehaviourPunCallbacksを継承して、PUNのコールバックを受け取れるようにする
 public class Samplescene : MonoBehaviourPunCallbacks
 {
+    List<string> room = new List<string>();
+
     Vector3[] playerpos = new Vector3[2];
     Dictionary<string, Vector3> Prefpos = new Dictionary<string, Vector3>
         {
@@ -53,7 +55,8 @@ public class Samplescene : MonoBehaviourPunCallbacks
         //{
         //    NodeInstantiate();
         //}
-        // PhotonServerSettingsの設定内容を使ってマスターサーバーへ接続する
+        
+        //PhotonServerSettingsの設定内容を使ってマスターサーバーへ接続する
         PhotonNetwork.ConnectUsingSettings();
 
     }
@@ -61,9 +64,14 @@ public class Samplescene : MonoBehaviourPunCallbacks
     // マスターサーバーへの接続が成功した時に呼ばれるコールバック
     public override void OnConnectedToMaster()
     {
-        // "Room"という名前のルームに参加する（ルームが存在しなければ作成して参加する）
+    //    // "Room"という名前のルームに参加する（ルームが存在しなければ作成して参加する）
         PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions(), TypedLobby.Default);
 
+    }
+
+    private void Update()
+    {
+        double photonTime = PhotonNetwork.Time;
     }
 
     // ゲームサーバーへの接続が成功した時に呼ばれるコールバック
@@ -90,7 +98,7 @@ public class Samplescene : MonoBehaviourPunCallbacks
     };
 
 
-        Vector3 position = PlayerPoint();
+        Vector3 position = new Vector3(2.41121197f, -2.11983871f, 10.008172f);
         if (PhotonNetwork.IsMasterClient)
         {
         var field = PhotonNetwork.Instantiate("千葉", position, Quaternion.identity);
@@ -103,6 +111,7 @@ public class Samplescene : MonoBehaviourPunCallbacks
         var dic = this.Prefpos;
         //dic.Remove("栃木");
         dic.Remove("千葉");
+        dic.Remove("栃木");
 
 
 
@@ -138,51 +147,29 @@ public class Samplescene : MonoBehaviourPunCallbacks
 
             }
             
+
         }
 
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.CurrentRoom.SetStartTime(PhotonNetwork.ServerTimestamp);
         }
-
-
-
-        //foreach (Sprite pre in prefsprites)
-        //{
-
-
-
-        //    foreach (Vector3 roomposition in positions)
-        //    {
-        //        Npcnode = PhotonNetwork.InstantiateRoomObject("Node", roomposition, Quaternion.identity);
-        //        NpcField = PhotonNetwork.InstantiateRoomObject("神奈川", roomposition, Quaternion.identity);
-        //        Npcnode.transform.parent = NpcField.transform;
-        //        NpcField.transform.position = roomposition + new Vector3(0, 0, 3);
-        //        Npcnode.transform.position = roomposition + new Vector3(0, 0, -3);
-        //        Prefstatas = pre;
-        //        NpcField.GetComponent<SpriteRenderer>().sprite = Prefstatas;
-        //        Debug.Log("発生");
-        //        break;
-        //    }
-
-        //}
-
-
-        GameObject[] roomObjects = GameObject.FindGameObjectsWithTag("Player");
-        foreach (GameObject roomObject in roomObjects)
+        else
         {
-
-            PhotonView photonView = roomObject.GetComponent<PhotonView>();
-            if (photonView != null && photonView.IsMine)
+            Prefpos.Add("栃木", new Vector3(-1.87878823f, 2.19016147f, 10.008172f));
+            //Debug.Log("栃木");
+            var myPos = Prefpos["栃木"];
+            var field = PhotonNetwork.Instantiate("千葉", myPos, Quaternion.identity);
+            field.GetComponent<Renderer>().material = fieldcolor["Red"];
+            Sprite sprite = Resources.Load<Sprite>("Sprites/栃木");
+            field.GetComponent<SpriteRenderer>().sprite = sprite;
+            Node node = field.transform.GetChild(0).gameObject.GetComponent<Node>();
+            node.setSprite("栃木");
+            if (PhotonNetwork.IsMasterClient)
             {
-                if (roomObject.name == "栃木")
-                {
-                    roomObject.transform.GetChild(0).GetComponent<Renderer>().material = Node.instance.materials[2];
-                    roomObject.GetComponent<Renderer>().material = Node.instance.fieldmaterials[2];
-                    roomObject.transform.GetChild(0).GetComponent<Node>().fraction = Fraction.PLAYER;
-                }
-
+                Destroy(field.gameObject);
             }
+            
         }
     }
 
@@ -190,7 +177,7 @@ public class Samplescene : MonoBehaviourPunCallbacks
     public Vector3 PlayerPoint()
     {
         playerpos[0] = new Vector3(2.41121197f, -2.11983871f, 10.008172f);
-        playerpos[1] = new Vector3(-1, -1, 0);
+        //playerpos[1] = new Vector3(-1, -1, 0);
         return playerpos[Random.Range(0, playerpos.Length)];
     }
 
