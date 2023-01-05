@@ -11,6 +11,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public GameObject LoadingPanel;
     public Text LoadingText;
     public GameObject buttons;
+    public GameObject firstLobbybuttons;
     public GameObject createRoomPanel;
     public Text enterRoomName;
     public GameObject roomPanel;
@@ -32,6 +33,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public Text placeHolderText;
     public InputField nameInput;
     private bool setName;
+    private bool atRandam;
     public GameObject startButton;
     public string LevelToPlay;
 
@@ -44,6 +46,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         CloseMenuUI();
         LoadingPanel.SetActive(true);
         LoadingText.text = "ネットワークに接続中...";
+        atRandam = false;
 
         if (!PhotonNetwork.IsConnected)
         {
@@ -61,6 +64,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         errorPanel.SetActive(false);
         roomListPanel.SetActive(false);
         nameInputPanel.SetActive(false);
+        firstLobbybuttons.SetActive(false);
 
     }
 
@@ -68,6 +72,12 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         CloseMenuUI();
         buttons.SetActive(true);
+    }
+    
+    public void FirstLobbyMenuDisplay()
+    {
+        CloseMenuUI();
+        firstLobbybuttons.SetActive(true);
     }
 
     public override void OnConnectedToMaster()
@@ -87,11 +97,30 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         ConfirmationName();
     }
 
+    public void RandamRoom()
+    {
+        PhotonNetwork.JoinRandomRoom();
+        atRandam = true; 
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        // ルームの参加人数を2人に設定する
+        var roomOptions = new RoomOptions();
+        roomOptions.MaxPlayers = 2;
+
+        PhotonNetwork.CreateRoom(null, roomOptions);
+        Debug.Log("待機中");
+
+    }
+
     public void OpenCreateRoomPanel()
     {
         CloseMenuUI();
         createRoomPanel.SetActive(true);
     }
+    
+    
     public void CreateRoomButton()
     {
         if (!string.IsNullOrEmpty(enterRoomName.text))
@@ -110,11 +139,29 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        CloseMenuUI();
-        roomPanel.SetActive(true);
-        roomName.text = PhotonNetwork.CurrentRoom.Name;
-        GetAllPlayer();
-        CheckRoomMaster();
+        if (!atRandam)
+        {
+            CloseMenuUI();
+            roomPanel.SetActive(true);
+            roomName.text = PhotonNetwork.CurrentRoom.Name;
+            GetAllPlayer();
+            CheckRoomMaster();
+        }
+        else
+        {
+            GetAllPlayer();
+            CheckRoomMaster();
+            LoadingText.text = "ルーム作成中...";
+            LoadingPanel.SetActive(true);
+            Debug.Log("待機するよー");
+            if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+            {
+                PlayGame();
+            }
+            
+            
+        }
+        
     }
 
     public void LeaveRoom()
@@ -146,6 +193,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         RoomUIInitialization();
 
         UpdateRoomList(roomList);
+        
     }
 
     public void UpdateRoomList(List<RoomInfo> roomList)
@@ -169,11 +217,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     public void RoomListDisplay(Dictionary<string,RoomInfo> cachedRoomList)
     {
+        Debug.Log(cachedRoomList.Count);
         foreach (var roomInfo in cachedRoomList)
         {
             Roomview newButton = Instantiate(originalRoomButton);
 
             newButton.ResisterRoomDetails(roomInfo.Value);
+            
 
             newButton.transform.SetParent(roomButtonContent.transform);
             allRoomButtons.Add(newButton);
@@ -263,7 +313,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
             PlayerPrefs.SetString("playerName", nameInput.text);
 
-            LobbyMenuDisplay();
+            // LobbyMenuDisplay();
+            FirstLobbyMenuDisplay();
 
             setName = true;
         }

@@ -76,10 +76,10 @@ public class Unit : MonoBehaviour
 
             case "é‹Ê":
                 Debug.Log("é‹Ê");
-                speed = 0.5f;
+                speed = 4f;
                 break;
-
-
+            
+            
 
         }
 

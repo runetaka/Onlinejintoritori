@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Realtime;
 
-public class Roomview : MonoBehaviour
+public class Roomview  : MonoBehaviour
 {
     public Text buttonText;
     private RoomInfo info;
@@ -10,7 +10,7 @@ public class Roomview : MonoBehaviour
 
     public void ResisterRoomDetails(RoomInfo info)
     {
-        Debug.Log(info);
+        
         this.info = info;
 
         buttonText.text = this.info.Name;

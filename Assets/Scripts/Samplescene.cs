@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 // MonoBehaviourPunCallbacksを継承して、PUNのコールバックを受け取れるようにする
 public class Samplescene : MonoBehaviourPunCallbacks
@@ -51,23 +52,35 @@ public class Samplescene : MonoBehaviourPunCallbacks
     private void Start()
     {
         //Titleから入る場合
-        //if (PhotonNetwork.IsConnected)
-        //{
-        //    NodeInstantiate();
-        //}
-        
+        if (PhotonNetwork.IsConnected)
+        {
+            NodeInstantiate();
+            PhotonNetwork.OfflineMode = true;
+        }
+        else
+        {
+            SceneManager.LoadScene(0);
+        }
+
         //PhotonServerSettingsの設定内容を使ってマスターサーバーへ接続する
-        PhotonNetwork.ConnectUsingSettings();
+
+        
+        //PhotonNetwork.ConnectUsingSettings();
+
+
 
     }
+
+
 
     // マスターサーバーへの接続が成功した時に呼ばれるコールバック
-    public override void OnConnectedToMaster()
-    {
-    //    // "Room"という名前のルームに参加する（ルームが存在しなければ作成して参加する）
-        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions(), TypedLobby.Default);
+    //public override void OnConnectedToMaster()
+    //{
+    //    //    // "Room"という名前のルームに参加する（ルームが存在しなければ作成して参加する）
+    //    PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions(), TypedLobby.Default);
 
-    }
+
+    //}
 
     private void Update()
     {
@@ -75,12 +88,13 @@ public class Samplescene : MonoBehaviourPunCallbacks
     }
 
     // ゲームサーバーへの接続が成功した時に呼ばれるコールバック
-    public override void OnJoinedRoom()
-    {
-        NodeInstantiate();
-
+    //public override void OnJoinedRoom()
+    //{
+    //    NodeInstantiate();
         
-    }
+
+
+    //}
     // ランダムな座標に自身のアバター（ネットワークオブジェクト）を生成する
     //var position = new Vector3(0,0,0);
     public void NodeInstantiate()
@@ -116,17 +130,17 @@ public class Samplescene : MonoBehaviourPunCallbacks
 
 
 
-        //Vector3[] positions =
-        //    {
-        //        new Vector3(0, 0, 0),
-        //        new Vector3(2.33f, -1.34f, 0),
-        //        new Vector3(4.66f, 0, 0),
-        //        new Vector3(-4.66f, 0, 0),
-        //        new Vector3(-2.33f, -1.34f, 0),
-        //        new Vector3(-2.33f, 1.34f, 0),
-        //        new Vector3(2.33f, 1.34f, 0)
+        Vector3[] positions =
+            {
+                new Vector3(0, 0, 0),
+                new Vector3(2.33f, -1.34f, 0),
+                new Vector3(4.66f, 0, 0),
+                new Vector3(-4.66f, 0, 0),
+                new Vector3(-2.33f, -1.34f, 0),
+                new Vector3(-2.33f, 1.34f, 0),
+                new Vector3(2.33f, 1.34f, 0)
 
-        //    };
+            };
 
         if (PhotonNetwork.IsMasterClient)
         {
